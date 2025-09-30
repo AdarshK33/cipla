@@ -20,15 +20,14 @@ export interface CreateUserResponse extends BaseResponse {
   userKey: string;
   isLoggedIn: number;
   brand: string;
-  votes: any;
   language: string;
 }
 
 export interface RegisterPayload {
+  name: string;
   mobile: string;
-  city: string;
-  uniqueCode: string;
-  state: string;
+  email: string;
+  city: number;
 }
 
 export interface VerifyOtpResponse extends BaseResponse {

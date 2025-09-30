@@ -1,26 +1,20 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, createContext, useContext } from "react";
-import TermsConditionsPopup from "../pages/term&condition/T&C";
-import PrivacyPolicy from "../pages/privacyPolicy/PrivacyPolicy";
-import CustomerSupport from "../pages/customerSupport/customerSupport";
+import popups from "../components/Popups";
 
 export const MODAL_TYPES = {
-  TERMS_CONDITIONS: "TERMS_CONDITIONS",
-  PRIVACY_POLICY: "PRIVACY_POLICY",
-  CUSTOMER_SUPPORT: "CUSTOMER_SUPPORT",
+  CONTACT_US: "CONTACT_US",
 };
 
 const MODAL_COMPONENTS = {
-  [MODAL_TYPES.TERMS_CONDITIONS]: TermsConditionsPopup,
-  [MODAL_TYPES.PRIVACY_POLICY]: PrivacyPolicy,
-  [MODAL_TYPES.CUSTOMER_SUPPORT]: CustomerSupport,
+  [MODAL_TYPES.CONTACT_US]: popups.ContactUsPopup,
 };
 
 type ContextType = {
   showModal: (
     modalType: string,
     modalProps?: any,
-    onClose?: () => void,
+    onClose?: () => void
   ) => void;
   hideModal: (blockOnClose?: boolean) => void;
   store: any;
@@ -53,7 +47,7 @@ export const GlobalModal: React.FC<{ children: React.ReactNode }> = ({
   const showModal = (
     modalType: string,
     modalProps: any = {},
-    onClose: () => void = () => {},
+    onClose: () => void = () => {}
   ) => {
     setStore({
       ...store,
@@ -82,9 +76,7 @@ export const GlobalModal: React.FC<{ children: React.ReactNode }> = ({
     }
     // console.log(modalProps)
     return (
-      <div id="global-modal">
-        <ModalComponent hideModal={hideModal} {...modalProps} />
-      </div>
+      <ModalComponent id="global-modal" hideModal={hideModal} {...modalProps} />
     );
   };
 

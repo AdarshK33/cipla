@@ -53,7 +53,7 @@ class APIS {
 
   initialize(
     showLoader: (loaderTitle?: string | undefined) => void,
-    hideLoader: () => void,
+    hideLoader: () => void
   ) {
     this.showLoader = showLoader;
     this.hideLoader = hideLoader;
@@ -98,15 +98,11 @@ class APIS {
       console.log(error);
     }
     this.showLoader("Starting session...");
-    return fetch(
-      `${import.meta.env.VITE_API_BASE_URL}/users
-`,
-      {
-        method: "POST",
-        headers,
-        body: JSON.stringify(payload),
-      },
-    )
+    return fetch(`${import.meta.env.VITE_API_BASE_URL}collect`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify(payload),
+    })
       .then(fetchHandlerText)
       .then(decryptData)
       .then(responseHelper)
@@ -121,48 +117,8 @@ class APIS {
       .finally(this.hideLoader);
   }
 
-  addVote(vote: string): Promise<BaseResponse> {
-    this.showLoader("Sending Vote...");
-    return sendEncrytedData("/users/addVote/", { vote })
-      .then(fetchHandlerText)
-      .then(decryptData)
-      .then(responseHelper)
-      .catch(defaultCatch)
-      .finally(this.hideLoader);
-  }
-
-  climeClick(): Promise<BaseResponse> {
-    this.showLoader("Claim your cashback...");
-    return sendEncrytedData("/users/climeClick/")
-      .then(fetchHandlerText)
-      .then(decryptData)
-      .then(responseHelper)
-      .catch(defaultCatch)
-      .finally(this.hideLoader);
-  }
-
-  getState(): Promise<BaseResponse> {
-    this.showLoader("State...");
-    return sendEncrytedData("/users/getState/")
-      .then(fetchHandlerText)
-      .then(decryptData)
-      .then(responseHelper)
-      .catch(defaultCatch)
-      .finally(this.hideLoader);
-  }
-
-  fetchCity(state: string): Promise<BaseResponse> {
-    this.showLoader("City...");
-    return sendEncrytedData("/users/getCities/", { state })
-      .then(fetchHandlerText)
-      .then(decryptData)
-      .then(responseHelper)
-      .catch(defaultCatch)
-      .finally(this.hideLoader);
-  }
-
   sendOTP(mobile: string): Promise<BaseResponse> {
-    this.showLoader("Sending OTP...");
+    this.showLoader("Seding OTP...");
     return sendEncrytedData("users/getOTP/", { mobile })
       .then(fetchHandlerText)
       .then(decryptData)
@@ -170,19 +126,9 @@ class APIS {
       .catch(defaultCatch)
       .finally(this.hideLoader);
   }
-  verifyOTP(otp: string): Promise<VerifyOtpResponse> {
+  verifyOTP(otp: string, token: string): Promise<VerifyOtpResponse> {
     this.showLoader("Verifying OTP...");
-    return sendEncrytedData("/users/verifyOtp/", { otp })
-      .then(fetchHandlerText)
-      .then(decryptData)
-      .then(responseHelper)
-      .catch(defaultCatch)
-      .finally(this.hideLoader);
-  }
-
-  resendOTP(): Promise<BaseResponse> {
-    this.showLoader("Resend OTP...");
-    return sendEncrytedData("/users/resendOtp/", {})
+    return sendEncrytedData("users/verifyOTP/", { otp, token })
       .then(fetchHandlerText)
       .then(decryptData)
       .then(responseHelper)
@@ -192,8 +138,8 @@ class APIS {
 
   register(payload: RegisterPayload): Promise<RegisterResponse> {
     // console.log(payload);
-    this.showLoader("Saving Registration details...");
-    return sendEncrytedData("/users/register/", payload)
+    this.showLoader("Saving details...");
+    return sendEncrytedData("users/register/", payload)
       .then(fetchHandlerText)
       .then(decryptData)
       .then(responseHelper)
@@ -201,30 +147,10 @@ class APIS {
       .finally(this.hideLoader);
   }
 
-  authorisedApi(url: any, payload: any): Promise<BaseResponse> {
+  authorisedApi(): Promise<BaseResponse> {
     // console.log(payload);
     this.showLoader();
-    return authorisedEncrytedApiCall(url, payload)
-      .then(fetchHandlerText)
-      .then(decryptData)
-      .then(responseHelper)
-      .catch(defaultCatch)
-      .finally(this.hideLoader);
-  }
-
-  async addUpi(payload: any): Promise<BaseResponse> {
-    this.showLoader("Submitting UPI...");
-    return authorisedEncrytedApiCall("/users/addUpi/", payload)
-      .then(fetchHandlerText)
-      .then(decryptData)
-      .then(responseHelper)
-      .catch(defaultCatch)
-      .finally(this.hideLoader);
-  }
-
-  async addAmazon(): Promise<BaseResponse> {
-    this.showLoader("Submitting Amazon...");
-    return authorisedEncrytedApiCall("/users/addAmazon/")
+    return authorisedEncrytedApiCall("users/path/")
       .then(fetchHandlerText)
       .then(decryptData)
       .then(responseHelper)

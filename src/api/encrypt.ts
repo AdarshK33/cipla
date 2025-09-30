@@ -2,8 +2,6 @@
 import * as CryptoJS from "crypto-js";
 import jsSHA from "jssha";
 import { store } from "../store/store";
-import { toast } from "react-toastify";
-
 
 const defaultHeaders: { [key: string]: string } = {
   Accept: "*/*",
@@ -14,7 +12,7 @@ export async function sendEncrytedData(
   url: string,
   data?: any,
   method = "POST",
-  headers = defaultHeaders,
+  headers = defaultHeaders
 ) {
   const accessDetails: any = await store.getState().auth;
   if (accessDetails && accessDetails.userKey && accessDetails.dataKey) {
@@ -29,7 +27,7 @@ export async function sendEncrytedData(
     const dAr = CryptoJS.enc.Utf8.parse(JSON.stringify(data));
     const dr = CryptoJS.enc.Base64.stringify(dAr);
     const hd = CryptoJS.enc.Base64.stringify(
-      CryptoJS.enc.Utf8.parse(t.toString()),
+      CryptoJS.enc.Utf8.parse(t.toString())
     );
 
     const shaObj = new jsSHA("SHA-256", "TEXT");
@@ -71,18 +69,10 @@ export async function sendEncrytedData(
     fullUrl += "?t=" + new Date().getTime().toString();
     return fetch(fullUrl, options);
   }
-  // return Promise.reject({
-  //   code: 401,
-  //   message: "Session not found! Please refresh",
-  // });
-  return (function () {
-    const error = {
-      code: 401,
-      message: "Session not found! Please refresh",
-    };
-    toast.error(error.message); // show toast
-    return Promise.reject(error);
-  })();
+  return Promise.reject({
+    code: 401,
+    message: "Session not found! Please refresh",
+  });
 }
 
 export function decryptData(response: any) {
@@ -117,7 +107,7 @@ export function decryptData(response: any) {
 export async function authorisedEncrytedApiCall(
   url: string,
   data?: any,
-  method = "POST",
+  method = "POST"
 ) {
   const accessDetails: any = await store.getState().auth;
   const headers = {

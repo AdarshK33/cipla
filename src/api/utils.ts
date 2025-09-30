@@ -104,80 +104,44 @@ export const responseHelper = (response: any): Promise<any> => {
 };
 
 export enum ERROR_IDS {
-  INVALID_MOBILE = "mobile",
-  INVALID_DISTRICT = "district",
-  INVALID_NAME = "name",
-  INVALID_EMAIL = "email",
-  INVALID_STATE = "state",
-  INVALID_CODE = "code",
-  INVALID_UNIQUE_CODE = "",
-  INVALID_OUTLET = "outlet",
-  INVALID_INVOICE_NUMBER = "invoiceNumber",
-  INVALID_INVOICE_ONE = "invoice1",
-  INVALID_INVOICE_TWO = "invoice2",
-  INVALID_OTP = "otp",
-  INVALID_UPI = "upiId",
-  DEFAULT_ERROR = "error",
-  INVALID_ADDRESS1 = "address1",
-  INVALID_ADDRESS2 = "address2",
-  INVALID_CITY = "city",
-  INVALID_PAN = "pan",
-  INVALID_PAN_NUMBER = "panNumber",
-  INVALID_PINCODE = "pincode",
+  INVALID_NAME = "invalidName",
+  INVALID_MOBILE = "invalidMobile",
+  INVALID_DATA = "invalidData",
+  INVALID_AGE = "invalidAge",
+  INVALID_GENDER = "invalidGender",
+  INVALID_OTP = "invalidOtpError",
+  ALREADY_REGISTERED = "alreadyRegistered",
 }
 
 // Default catch function when API fails
 export const defaultCatch = (err: any): Promise<any> => {
-  const ignoreMessageKeys = [...Object.values(ERROR_IDS)];
-  // console.log("ignoreMessageKeys", ignoreMessageKeys);
+  const ignoreMessageKeys = [
+    ERROR_IDS.INVALID_MOBILE,
+    ERROR_IDS.INVALID_NAME,
+    ERROR_IDS.INVALID_OTP,
+    ERROR_IDS.INVALID_AGE,
+    ERROR_IDS.INVALID_DATA,
+    ERROR_IDS.INVALID_GENDER,
+    ERROR_IDS.ALREADY_REGISTERED,
+  ];
   const { statusCode, message, messageId = "" } = err;
   const isOnline = API.getIsOnline();
   if (typeof err === "string") {
     toast.error(
       isOnline
         ? "Something went wrong, try again after some time"
-        : "You are offline",
+        : "You are offline"
     );
   } else if (!ignoreMessageKeys.includes(messageId)) {
     if (message === "Failed to fetch") {
       toast.error(
-        isOnline
-          ? "Please check your network and try again"
-          : "You are offline",
+        isOnline ? "Please check your network and try again" : "You are offline"
       );
     } else if (statusCode === 401) {
       logoutUser();
       toast.info("Your session has been expired");
     } else {
       toast.error(message || "Something went wrong, try again after some time");
-    }
-  }
-  return Promise.reject(err);
-};
-
-export const noerrCatch = (err: any): Promise<any> => {
-  const ignoreMessageKeys = [...Object.values(ERROR_IDS)];
-  // console.log("ignoreMessageKeys", ignoreMessageKeys);
-  const { statusCode, message, messageId = "" } = err;
-  const isOnline = API.getIsOnline();
-  if (typeof err === "string") {
-    toast.error(
-      isOnline
-        ? "Something went wrong, try again after some time"
-        : "You are offline",
-    );
-  } else if (!ignoreMessageKeys.includes(messageId)) {
-    if (message === "Failed to fetch") {
-      toast.error(
-        isOnline
-          ? "Please check your network and try again"
-          : "You are offline",
-      );
-    } else if (statusCode === 401) {
-      logoutUser();
-      toast.info("Your session has been expired");
-    } else {
-      console.log(err);
     }
   }
   return Promise.reject(err);

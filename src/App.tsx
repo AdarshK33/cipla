@@ -1,32 +1,28 @@
 import "./App.scss";
-
-import { Route, Routes, useLocation } from "react-router-dom";
-import { useEffect, Suspense, lazy, useLayoutEffect } from "react";
+import { Route, Routes } from "react-router-dom";
+import { useEffect } from "react";
 import { useGlobalLoaderContext } from "./helpers/GlobalLoader";
 import API from "./api";
 import { ROUTES } from "./lib/consts";
-const GlobalSuspenseLoader = lazy(() => import("./helpers/UiLoader"));
-
-import PrivateRoute from "./helpers/PrivateRoute";
-const Home = lazy(() => import("./pages/Menu/menu"));
-const CYC = lazy(() => import("./pages/Cyc/CYC"));
-const ThankYou = lazy(() => import("./pages/ThanyouVote/Thankyou"));
-const Registration = lazy(() => import("./pages/Registration/Registration"));
-const OtpVerification = lazy(
-  () => import("./pages/verificationOtp/VerificationOtp"),
-);
-const CashBack = lazy(() => import("./pages/cashBackMethod/cashBack"));
-const ThankYouParticipation = lazy(
-  () => import("./pages/ThankYouParticipation/ThankYouParticipation"),
-);
+import Home from "./pages/Home";
+import Counter from "./pages/Counter";
 
 function App() {
-  const location = useLocation();
-  // const navigate = useNavigate();
   const { showLoader, hideLoader } = useGlobalLoaderContext();
 
   useEffect(() => {
     API.initialize(showLoader, hideLoader);
+
+    // if (!isLoggedIn) {
+    //   API.createUser().then((response) => {
+    //     store.dispatch(setUserKey(response));
+    //     if (!response.isLoggedIn && isLoggedIn) {
+    //       logoutUser();
+    //       navigate(ROUTES.REGISTER);
+    //       toast.info("Your session has been expired");
+    //     }
+    //   });
+    // }
 
     window.addEventListener("online", () => {
       API.setIsOnline(true);
@@ -34,46 +30,16 @@ function App() {
     window.addEventListener("offline", () => {
       API.setIsOnline(false);
     });
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useLayoutEffect(() => {
-    window.scrollTo(0, 0);
-    // console.log("scroll to top on route change:");
-  }, [location.pathname]);
-
   return (
-    <div className="App">
-      <Suspense fallback={<GlobalSuspenseLoader />}>
-        <Routes>
-          <Route path={ROUTES.HOME} element={<Home />} />
-          <Route path={ROUTES.CYC} element={<CYC />} />
-          <Route path={ROUTES.ThankYou} element={<ThankYou />} />
-          <Route path={ROUTES.REGISTRATION} element={<Registration />} />
-          <Route path={ROUTES.VERIFYOTP} element={<OtpVerification />} />
-          <Route
-            path={ROUTES.CASHBACK}
-            element={
-               <PrivateRoute>
-
-                 <CashBack />
-               </PrivateRoute>
-               
-           
-            }
-          />
-          <Route
-            path={ROUTES.ThankYouParticipation}
-            element={
-              <PrivateRoute>
-                <ThankYouParticipation />
- </PrivateRoute>
-            }
-          />
-        </Routes>
-      </Suspense>
-    </div>
+    <>
+      <Routes>
+        <Route path={ROUTES.HOME} element={<Home />} />
+        <Route path={ROUTES.COUNTER} element={<Counter />} />
+      </Routes>
+    </>
   );
 }
 
